@@ -142,16 +142,18 @@ void run(char *buf)
 
 int main(int arhc, char **argv)
 {
-    char *buf;
-    buf = (char *)malloc(sizeof(char) * 2048);
-    while (1)
-    {
+    char buf[2048];
+    //buf = (char *)malloc(sizeof(char) * 2048);
+    // while (1)
+    // {
+        memset(buf, 0, 2048);
         if (read(0, buf, 2048) < 0)
             return (1);
+        // printf("Len: %ld\n", strlen(buf));
         if (strcmp(buf, "stop\n") == 0)
             return (0);
         run(buf);
-        memset(buf, 0, 2048);
-    }
-    free (buf);
+        
+    // }
+    //free (buf);
 }
