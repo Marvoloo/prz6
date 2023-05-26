@@ -1,7 +1,9 @@
 # Выполнение Фаззинг-тестирования приложения
 ## Выполнил - Сучков Василий Вячеславович ББМО-01-22
 ### 1. Подготовка дистрибутива Ubuntu для выполнения практической работы
-<img src="/images/ubuntu.png" align="center">
+<p align="center">
+  <img src="/images/ubuntu.png">
+</p>
 
 Выполняем базовые команды обновления репозиториев:
 ```bash
@@ -45,7 +47,9 @@ void run(char *buf)
 }
 ```
 Пример использования:
-<img src="/images/usage.png" align="center">
+<p align="center">
+  <img src="/images/usage.png">
+</p>
 
 Программа выводит:
 * Строку в верхнем регистре
@@ -110,7 +114,9 @@ AFL_USE_ASAN=1 AFL_USE_UBSAN=1 make -j20
           12112~jklad~kHHHHSHDAKJDHkjlksasas____~_~_~+asas
 ```
 Вывод санитайзера показал ошибку в распределении памяти в функции run, и действительно, именно там я оставил ошибку.
-<img src="/images/sanitaizer.png" align="center">
+<p align="center">
+  <img src="/images/sanitaizer.png">
+</p>
 
 Уберем ошибку и проверим вывод санитайзера.
 ```c
@@ -118,13 +124,17 @@ char * tmp;
 tmp = (char *) malloc(sizeof(char) * strlen(buf));
 ```
 Ошибки больше нет, санитайзер помог нам найти ошибку с выделением памяти, что очень критично в "опасных" языках по типу СИ.
-<img src="/images/sanitaizer_pass.png" align="center">
+<p align="center">
+  <img src="/images/sanitaizer_pass.png">
+</p>
 
 Но т.к. размер буфера у нас фиксированный (2048), то при подаче большой входной последовательности санитайзер должен выдать ошибку, проверим, подадим на вход другой файл из набора с большой строкой.
 ```bash
 ./main < input/d -f 1 -l 1 -noImage
 ```
-<img src="/images/sanitaizer_bad.png" align="center">
+<p align="center">
+  <img src="/images/sanitaizer_bad.png">
+</p>
 
 Ошибка действительно есть, значит санитайзер успешно отрабатывает для нашего приложения.
 ### 5. Анализ покрытия кода
@@ -157,4 +167,7 @@ AFL_USE_ASAN=1 AFL_USE_UBSAN=1 make -j20
 afl-fuzz -i input -o out ./main
 ```
 Мы получили результат, словили 8 крашей, для такой маленькой программы - это очень много, ну вероятнее всего санитайзер не пропустил входы с длинной больше 2048, при этом некоторые тесты прошли, но самое главное, что программа очень не оптимизирована в плане использования вычислительных ресурсов, если посмотреть на нижнее значение занятости cpu, то это станет очевидно.
-<img src="/images/fuzzing.png" align="center">
+
+<p align="center">
+  <img src="/images/fuzzing.png">
+</p>
